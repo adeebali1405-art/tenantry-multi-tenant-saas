@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tenantry – Multi-Tenant Auth & Billing Suite By M.Adeeb Ali Full Stack Web & App Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f2f4f1;--surf:#fff;--ink:#12262b;--mute:#5d6f73;--line:#dde3df;--side:#0e2a2f;--side-ink:#c9dbd8;--acc:#0f766e;--acc-ink:#fff;--amber:#d98a12;--ok:#1b8a5a;--bad:#c0392b;--code:#0c1d21;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b1517;--surf:#122226;--ink:#e3eeec;--mute:#8fa5a8;--line:#223639;--side:#07181b;--acc:#2dd4bf;--acc-ink:#04201c;--amber:#f0b04a;--ok:#4cd698;--bad:#ff7b6b;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0b1517;--surf:#122226;--ink:#e3eeec;--mute:#8fa5a8;--line:#223639;--side:#07181b;--acc:#2dd4bf;--acc-ink:#04201c;--amber:#f0b04a;--ok:#4cd698;--bad:#ff7b6b;color-scheme:dark}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font:400 15px/1.55 "IBM Plex Sans",system-ui,sans-serif}
+h1,h2,h3{font-family:"Bricolage Grotesque","IBM Plex Sans",sans-serif;margin:0;letter-spacing:-.01em;line-height:1.15}
+h1{font-size:30px;font-weight:700}h2{font-size:20px;font-weight:700}h3{font-size:16px;font-weight:500}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.mono{font-family:"IBM Plex Mono",monospace;font-size:12.5px}
+.mute{color:var(--mute)}
+.btn{border:1px solid var(--line);background:var(--surf);padding:8px 14px;border-radius:7px;font-weight:500}
+.btn:hover{border-color:var(--acc)}
+.btn.pri{background:var(--acc);color:var(--acc-ink);border-color:var(--acc)}
+.btn.sm{padding:4px 10px;font-size:13px}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+input,select{background:var(--surf);border:1px solid var(--line);border-radius:7px;padding:8px 10px;width:100%}
+label{display:block;font-size:13px;font-weight:500;margin:0 0 4px}
+.badge{display:inline-block;padding:1px 9px;border-radius:99px;font-size:12px;font-weight:600;border:1px solid var(--line)}
+.badge.ok{color:var(--ok);border-color:var(--ok)}.badge.bad{color:var(--bad);border-color:var(--bad)}.badge.acc{color:var(--acc);border-color:var(--acc)}
+/* login */
+.login{min-height:100vh;display:grid;grid-template-columns:1.1fr 1fr}
+.hero{background:var(--side);color:var(--side-ink);padding:56px;display:flex;flex-direction:column;justify-content:space-between;gap:32px}
+.hero h1{color:#f1f8f6;font-size:44px;max-width:14ch}
+.hero .tenants{display:flex;gap:10px;flex-wrap:wrap}
+.hero .tenants span{border:1px dashed #3b6a68;padding:6px 12px;border-radius:6px;font-family:"IBM Plex Mono",monospace;font-size:12.5px}
+.panel{padding:56px;display:flex;flex-direction:column;justify-content:center;gap:18px;max-width:520px}
+.persona{display:flex;justify-content:space-between;align-items:center;width:100%;text-align:left;padding:10px 14px;border:1px solid var(--line);border-radius:8px;background:var(--surf)}
+.persona:hover{border-color:var(--acc)}
+.sso{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.or{display:flex;align-items:center;gap:12px;color:var(--mute);font-size:13px}.or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
+/* app */
+.app{display:grid;grid-template-columns:240px 1fr;min-height:100vh}
+aside{background:var(--side);color:var(--side-ink);padding:20px 14px;display:flex;flex-direction:column;gap:6px;position:sticky;top:0;height:100vh}
+aside .brand{font:700 20px "Bricolage Grotesque",sans-serif;color:#f1f8f6;padding:0 10px 14px}
+aside select{background:#12383d;border-color:#265055;color:#e6f2f0;margin-bottom:12px}
+.nav{display:flex;align-items:center;justify-content:space-between;width:100%;background:none;border:0;color:inherit;text-align:left;padding:8px 10px;border-radius:7px}
+.nav:hover{background:#12383d}.nav.on{background:#1a4a4f;color:#fff}
+.nav .lk{font-size:12px;opacity:.7}
+.side-foot{margin-top:auto;font-size:13px;display:grid;gap:8px}
+main{padding:32px 40px 64px;max-width:1100px;width:100%}
+.head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:24px;flex-wrap:wrap}
+.card{background:var(--surf);border:1px solid var(--line);border-radius:10px;padding:20px}
+.grid{display:grid;gap:16px}.g3{grid-template-columns:repeat(3,1fr)}.g2{grid-template-columns:1fr 1fr}
+.meter{height:8px;background:var(--line);border-radius:99px;overflow:hidden;margin:10px 0 6px}
+.meter i{display:block;height:100%;background:var(--acc);transition:width .5s}
+.meter i.warn{background:var(--amber)}.meter i.full{background:var(--bad)}
+.big{font:700 28px "Bricolage Grotesque",sans-serif}
+.wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-weight:600;color:var(--mute);font-size:13px}
+.plan{display:flex;flex-direction:column;gap:12px}
+.plan.cur{border:2px solid var(--acc)}
+.plan ul{margin:0;padding-left:18px;color:var(--mute);font-size:14px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{border:0;background:none;padding:6px 14px}.seg .on{background:var(--acc);color:var(--acc-ink)}
+.gate{text-align:center;padding:48px 24px;display:grid;gap:12px;justify-items:center}
+pre{margin:0;background:var(--code);color:#cfe7e2;padding:16px;border-radius:8px;overflow-x:auto;font:400 12.5px/1.6 "IBM Plex Mono",monospace}
+.cp{float:right}
+.log{display:grid;gap:0}.log div{display:flex;gap:14px;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px}
+.log .t{color:var(--mute);min-width:76px}
+.mod{position:fixed;inset:0;background:rgba(5,15,17,.6);display:grid;place-items:center;padding:16px;z-index:20}
+.mod .card{width:min(440px,100%);display:grid;gap:12px}
+.row{display:flex;justify-content:space-between;gap:12px}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:8px;z-index:30;font-size:14px;max-width:90vw}
+.toast.bad{background:var(--bad);color:#fff}
+.mat td:not(:first-child),.mat th:not(:first-child){text-align:center}
+.mat .me{background:color-mix(in srgb,var(--acc) 14%,transparent)}
+@media (max-width:860px){
+.login{grid-template-columns:1fr}.hero{padding:32px}.hero h1{font-size:32px}.panel{padding:28px;max-width:none}
+.app{grid-template-columns:1fr}
+aside{position:static;height:auto;flex-direction:row;flex-wrap:wrap;align-items:center;padding:12px}
+aside .brand{padding:0 8px 0 0}aside select{width:auto;margin:0}.side-foot{margin:0;flex-direction:row}
+.nav{width:auto}main{padding:20px 16px 48px}.g3,.g2{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<div id="layer"></div>
+<script>
+"use strict";
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const fmt=n=>n.toLocaleString("en-US");
+const usd=n=>"$"+n.toLocaleString("en-US",{minimumFractionDigits:n%1?2:0,maximumFractionDigits:2});
+const now=()=>new Date().toLocaleTimeString("en-US",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
+
+const PERMS={
+ "org:members:manage":"Manage members","org:billing:manage":"Manage billing","org:sso:manage":"Configure SSO",
+ "org:usage:write":"Send metered usage","org:audit:read":"Read audit log"};
+const ROLES={
+ owner:Object.keys(PERMS),
+ admin:["org:members:manage","org:sso:manage","org:audit:read","org:usage:write"],
+ billing:["org:billing:manage","org:audit:read"],
+ developer:["org:usage:write"],
+ viewer:[]};
+const PLANS={
+ free:{name:"Starter",price:0,seats:3,api:10000,over:0,sso:false,feat:["3 seats","10,000 API calls","Community support"]},
+ pro:{name:"Growth",price:79,seats:15,api:250000,over:0.4,sso:false,feat:["15 seats","250,000 API calls","$0.40 per extra 1,000 calls","Email support"]},
+ ent:{name:"Enterprise",price:499,seats:500,api:5000000,over:0.2,sso:true,feat:["500 seats","5,000,000 API calls","SAML SSO and domain enforcement","$0.20 per extra 1,000 calls","Audit log and SLA"]}};
+const PEOPLE={ada:"Ada Okafor",ben:"Ben Lindqvist",cleo:"Cleo Marsh",dan:"Dan Reyes",vera:"Vera Choi"};
+const m=(u,r)=>({email:u+"@acme.io",name:PEOPLE[u],role:r});
+const T={
+ acme:{name:"Acme Robotics",plan:"pro",api:182400,storage:41,sso:{provider:"Okta",domain:"acme.io",enforce:false,on:false},
+  members:[m("ada","owner"),m("ben","admin"),m("cleo","billing"),m("dan","developer"),m("vera","viewer")],
+  inv:[{id:"INV-1047",d:"Oct 01, 2026",a:79,s:"paid"},{id:"INV-1031",d:"Sep 01, 2026",a:79,s:"paid"},{id:"INV-1008",d:"Aug 01, 2026",a:79,s:"paid"}],
+  log:[{t:"09:14:02",who:"ben@acme.io",msg:"Invited vera@acme.io as viewer",ok:true}]},
+ globex:{name:"Globex Logistics",plan:"ent",api:3120000,storage:812,sso:{provider:"Microsoft Entra ID",domain:"globex.com",enforce:true,on:true},
+  members:[{email:"dan@acme.io",name:PEOPLE.dan,role:"owner"},{email:"ada@acme.io",name:PEOPLE.ada,role:"admin"},{email:"vera@acme.io",name:PEOPLE.vera,role:"viewer"}],
+  inv:[{id:"INV-0990",d:"Oct 01, 2026",a:499+0,s:"paid"}],log:[]},
+ initech:{name:"Initech Labs",plan:"free",api:9400,storage:1,sso:{provider:"Okta",domain:"initech.dev",enforce:false,on:false},
+  members:[{email:"ben@acme.io",name:PEOPLE.ben,role:"owner"},{email:"ada@acme.io",name:PEOPLE.ada,role:"viewer"},{email:"cleo@acme.io",name:PEOPLE.cleo,role:"developer"}],
+  inv:[],log:[]}};
+const VIEWS=[["overview","Overview",null],["members","Members",null],["roles","Roles and access",null],["billing","Billing","org:billing:manage"],["sso","Single sign-on","org:sso:manage"],["audit","Audit log","org:audit:read"],["kit","Next.js starter kit",null]];
+const S={user:null,tid:"acme",view:"overview",annual:false};
+
+const tn=()=>T[S.tid];
+const myRole=(t=tn())=>(t.members.find(x=>x.email===S.user)||{}).role;
+const can=p=>(ROLES[myRole()]||[]).includes(p);
+function log(msg,ok=true){tn().log.unshift({t:now(),who:S.user,msg,ok})}
+function toast(msg,bad){const e=document.createElement("div");e.className="toast"+(bad?" bad":"");e.textContent=msg;e.setAttribute("role","status");document.body.append(e);setTimeout(()=>e.remove(),2600)}
+function guard(p,label,fn){
+ if(!can(p)){log("Blocked: "+label+" (needs "+p+")",false);toast("403 Forbidden – your role can’t "+label.toLowerCase()+".",true);render();return}
+ fn();render()}
+const price=(k)=>S.annual?Math.round(PLANS[k].price*.8):PLANS[k].price;
+function bill(t){const p=PLANS[t.plan];const extra=Math.max(0,t.api-p.api);return{base:p.price,extra,over:Math.ceil(extra/1000)*p.over}}
+
+/* ---------- login ---------- */
+function loginView(){
+ return `<div class="login"><section class="hero"><div class="mono">tenantry / auth + billing console</div>
+ <div><h1>One login. Many workspaces. Metered to the call.</h1><p style="max-width:44ch;margin-top:16px">Sign in, switch tenants, and see how role-based access, SSO and usage billing behave when every permission is checked on the server edge.</p></div>
+ <div class="tenants"><span>acme-robotics</span><span>globex-logistics</span><span>initech-labs</span></div></section>
+ <section class="panel"><h2>Sign in</h2>
+ <div class="sso">${["Okta","Entra ID","Google"].map(p=>`<button class="btn" data-act="sso" data-p="${p}">${p}</button>`).join("")}</div>
+ <div class="or">or choose a demo identity</div>
+ ${Object.keys(PEOPLE).map(u=>{const rs=Object.keys(T).map(k=>{const x=T[k].members.find(y=>y.email===u+"@acme.io");return x?x.role:null}).filter(Boolean);
+  return `<button class="persona" data-act="login" data-u="${u}@acme.io"><span><b>${PEOPLE[u]}</b><br><span class="mute mono">${u}@acme.io</span></span><span class="badge">${rs.join(" · ")}</span></button>`}).join("")}
+ <p class="mute" style="font-size:13px;margin:0">Demo environment. No real accounts, cards or emails are used.</p></section></div>`}
+
+/* ---------- app shell ---------- */
+function shell(body){
+ const mine=Object.keys(T).filter(k=>T[k].members.some(x=>x.email===S.user));
+ return `<div class="app"><aside><div class="brand">Tenantry</div>
+ <select id="tsel" aria-label="Workspace">${mine.map(k=>`<option value="${k}" ${k===S.tid?"selected":""}>${esc(T[k].name)}</option>`).join("")}</select>
+ ${VIEWS.map(([k,l,p])=>`<button class="nav ${S.view===k?"on":""}" data-act="nav" data-v="${k}">${l}${p&&!can(p)?'<span class="lk">locked</span>':""}</button>`).join("")}
+ <div class="side-foot"><div>${esc(S.user)}<br><span class="badge acc">${myRole()}</span></div><button class="btn sm" data-act="out">Sign out</button></div></aside>
+ <main>${body}</main></div>`}
+const head=(t,sub,extra="")=>`<div class="head"><div><h1>${t}</h1><p class="mute" style="margin:6px 0 0">${sub}</p></div>${extra}</div>`;
+const gate=(title,txt,btn)=>`<div class="card gate"><h2>${title}</h2><p class="mute" style="max-width:48ch;margin:0">${txt}</p>${btn||""}</div>`;
+
+function meter(label,used,max,unit=""){
+ const pc=Math.min(100,used/max*100);const cls=used>max?"full":pc>80?"warn":"";
+ return `<div class="card"><div class="mute">${label}</div><div class="big">${fmt(used)}<span class="mute" style="font-size:15px"> / ${fmt(max)}${unit}</span></div>
+ <div class="meter"><i class="${cls}" style="width:${pc}%"></i></div><div class="mute" style="font-size:13px">${used>max?"Over the included amount":Math.round(pc)+"% of plan used"}</div></div>`}
+
+/* ---------- views ---------- */
+function overview(){
+ const t=tn(),p=PLANS[t.plan],b=bill(t);
+ return head(esc(t.name),`${p.name} plan · you are ${myRole()} here`,`<button class="btn pri" data-act="burst" ${can("org:usage:write")?"":"disabled"}>Send 25,000 test requests</button>`)+
+ `<div class="grid g3">${meter("API calls this cycle",t.api,p.api)}${meter("Seats",t.members.length,p.seats)}${meter("Storage",t.storage,t.plan==="free"?1:t.plan==="pro"?100:5000," GB")}</div>
+ <div class="card" style="margin-top:16px"><h2>Projected invoice</h2>
+ <table><tr><td>${p.name} base</td><td style="text-align:right">${usd(b.base)}</td></tr>
+ <tr><td>Overage · ${fmt(b.extra)} calls${p.over?` at ${usd(p.over)} per 1,000`:""}</td><td style="text-align:right">${usd(b.over)}</td></tr>
+ <tr><td><b>Total due Dec 01</b></td><td style="text-align:right"><b>${usd(b.base+b.over)}</b></td></tr></table>
+ ${t.plan==="free"&&b.extra>0?'<p class="mute">Starter blocks calls above the limit. Upgrade to keep requests flowing.</p>':""}</div>`}
+
+function members(){
+ const t=tn(),mg=can("org:members:manage");
+ return head("Members",`${t.members.length} of ${PLANS[t.plan].seats} seats used`)+
+ `<div class="card wrap"><table><tr><th>Person</th><th>Role</th><th></th></tr>${t.members.map((x,i)=>`<tr><td><b>${esc(x.name)}</b><br><span class="mute mono">${esc(x.email)}</span></td>
+ <td><select data-act="role" data-i="${i}" ${mg&&x.role!=="owner"?"":"disabled"} aria-label="Role for ${esc(x.name)}">${Object.keys(ROLES).filter(r=>r!=="owner"||x.role==="owner").map(r=>`<option ${r===x.role?"selected":""}>${r}</option>`).join("")}</select></td>
+ <td><button class="btn sm" data-act="rm" data-i="${i}" ${x.role==="owner"?"disabled":""}>Remove</button></td></tr>`).join("")}</table></div>
+ <div class="card" style="margin-top:16px"><h2 style="margin-bottom:12px">Invite a teammate</h2><div class="row" style="align-items:flex-end;flex-wrap:wrap">
+ <div style="flex:2;min-width:200px"><label for="ie">Work email</label><input id="ie" type="email" placeholder="name@${esc(t.sso.domain)}"></div>
+ <div style="flex:1;min-width:140px"><label for="ir">Role</label><select id="ir">${["admin","billing","developer","viewer"].map(r=>`<option ${r==="viewer"?"selected":""}>${r}</option>`).join("")}</select></div>
+ <button class="btn pri" data-act="invite">Send invite</button></div></div>`}
+
+function roles(){
+ const mine=myRole();
+ return head("Roles and access","Every action is checked against this matrix before it runs.")+
+ `<div class="card wrap"><table class="mat"><tr><th>Permission</th>${Object.keys(ROLES).map(r=>`<th class="${r===mine?"me":""}">${r}</th>`).join("")}</tr>
+ ${Object.entries(PERMS).map(([k,l])=>`<tr><td>${l}<br><span class="mute mono">${k}</span></td>${Object.keys(ROLES).map(r=>`<td class="${r===mine?"me":""}">${ROLES[r].includes(k)?'<b style="color:var(--ok)">Allowed</b>':'<span class="mute">–</span>'}</td>`).join("")}</tr>`).join("")}</table></div>`}
+
+function billing(){
+ if(!can("org:billing:manage"))return head("Billing","Plans, invoices and payment")+gate("Billing is limited to owners and billing admins","You’re a "+myRole()+" in this workspace. Ask an owner to grant the billing role.");
+ const t=tn();
+ return head("Billing","Change plans and review invoices",`<div class="seg" role="group" aria-label="Billing period"><button class="${S.annual?"":"on"}" data-act="per" data-v="0">Monthly</button><button class="${S.annual?"on":""}" data-act="per" data-v="1">Annual · save 20%</button></div>`)+
+ `<div class="grid g3">${Object.keys(PLANS).map(k=>{const p=PLANS[k];return `<div class="card plan ${t.plan===k?"cur":""}"><h3>${p.name} ${t.plan===k?'<span class="badge ok">Current</span>':""}</h3>
+ <div class="big">${usd(price(k))}<span class="mute" style="font-size:14px"> /month</span></div><ul>${p.feat.map(f=>`<li>${f}</li>`).join("")}</ul>
+ <button class="btn ${t.plan===k?"":"pri"}" style="margin-top:auto" data-act="plan" data-k="${k}" ${t.plan===k?"disabled":""}>${t.plan===k?"Current plan":PLANS[k].price>PLANS[t.plan].price?"Upgrade":"Downgrade"}</button></div>`}).join("")}</div>
+ <div class="card wrap" style="margin-top:16px"><h2 style="margin-bottom:8px">Invoices</h2>${t.inv.length?`<table><tr><th>Invoice</th><th>Date</th><th>Amount</th><th>Status</th></tr>${t.inv.map(i=>`<tr><td class="mono">${i.id}</td><td>${i.d}</td><td>${usd(i.a)}</td><td><span class="badge ok">${i.s}</span></td></tr>`).join("")}</table>`:'<p class="mute">No invoices yet. Your first one appears after you upgrade.</p>'}</div>`}
+
+function sso(){
+ const t=tn();
+ if(!can("org:sso:manage"))return head("Single sign-on","SAML identity provider")+gate("SSO is limited to owners and admins","You’re a "+myRole()+" here.");
+ if(!PLANS[t.plan].sso)return head("Single sign-on","SAML identity provider")+gate("SSO is part of the Enterprise plan","Connect Okta, Microsoft Entra ID or Google Workspace and require everyone on your domain to sign in through it.",can("org:billing:manage")?'<button class="btn pri" data-act="nav" data-v="billing">See plans</button>':'<span class="mute">Ask a billing admin to upgrade.</span>');
+ const s=t.sso;
+ return head("Single sign-on","Connection status: "+(s.on?'<span class="badge ok">Active</span>':'<span class="badge">Not connected</span>'))+
+ `<div class="card grid g2"><div><label for="sp">Identity provider</label><select id="sp">${["Okta","Microsoft Entra ID","Google Workspace","OneLogin"].map(p=>`<option ${p===s.provider?"selected":""}>${p}</option>`).join("")}</select></div>
+ <div><label for="sd">Verified domain</label><input id="sd" value="${esc(s.domain)}"></div>
+ <label style="display:flex;gap:10px;align-items:center;grid-column:1/-1"><input id="se" type="checkbox" style="width:auto" ${s.enforce?"checked":""}>Require SSO for everyone on this domain</label>
+ <div style="grid-column:1/-1"><div class="mute" style="font-size:13px;margin-bottom:6px">Paste these into your identity provider</div><pre>ACS URL   https://app.tenantry.dev/api/auth/saml/${S.tid}/acs
+Entity ID urn:tenantry:${S.tid}
+NameID    emailAddress</pre></div>
+ <div class="row" style="grid-column:1/-1"><button class="btn" data-act="ssotest">Test connection</button><button class="btn pri" data-act="ssosave">Save changes</button></div></div>`}
+
+function audit(){
+ if(!can("org:audit:read"))return head("Audit log","Security events")+gate("Audit log is limited to owners, admins and billing","Your role doesn’t include org:audit:read.");
+ const l=tn().log;
+ return head("Audit log","Includes every action your role was blocked from")+`<div class="card"><div class="log">${l.length?l.map(e=>`<div><span class="t mono">${e.t}</span><span class="mono" style="min-width:130px">${esc(e.who)}</span><span style="flex:1">${esc(e.msg)}</span><span class="badge ${e.ok?"ok":"bad"}">${e.ok?"allowed":"denied"}</span></div>`).join(""):'<p class="mute">No events yet. Try inviting a member or changing a plan.</p>'}</div></div>`}
+
+const KIT={
+"middleware.ts · Clerk route protection":`import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+
+const isProtected = createRouteMatcher(["/dashboard(.*)", "/api/(.*)"]);
+const isPublic = createRouteMatcher(["/api/webhooks/(.*)"]);
+
+export default clerkMiddleware(async (auth, req) => {
+  if (isProtected(req) && !isPublic(req)) await auth.protect();
+});
+
+export const config = { matcher: ["/((?!_next|.*\\\\..*).*)", "/(api|trpc)(.*)"] };`,
+"lib/rbac.ts · permission guard for route handlers":`import { auth } from "@clerk/nextjs/server";
+
+export async function requirePermission(permission: string) {
+  const { orgId, has } = await auth();
+  if (!orgId) throw new Response("No active organization", { status: 401 });
+  if (!has({ permission })) throw new Response("Forbidden", { status: 403 });
+  return orgId;
+}
+// await requirePermission("org:billing:manage");`,
+"app/api/usage/route.ts · metered billing event":`import Stripe from "stripe";
+import { requirePermission } from "@/lib/rbac";
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+
+export async function POST(req: Request) {
+  const orgId = await requirePermission("org:usage:write");
+  const { calls } = await req.json();
+  const customer = await getStripeCustomerId(orgId);
+  await stripe.billing.meterEvents.create({
+    event_name: "api_call",
+    payload: { stripe_customer_id: customer, value: String(calls) },
+  });
+  return Response.json({ ok: true });
+}`,
+"app/api/webhooks/stripe/route.ts · subscription sync":`import Stripe from "stripe";
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+
+export async function POST(req: Request) {
+  const sig = req.headers.get("stripe-signature")!;
+  const event = stripe.webhooks.constructEvent(
+    await req.text(), sig, process.env.STRIPE_WEBHOOK_SECRET!);
+
+  switch (event.type) {
+    case "customer.subscription.updated":
+    case "customer.subscription.deleted":
+      await syncPlan(event.data.object as Stripe.Subscription);
+      break;
+    case "invoice.payment_failed":
+      await flagPastDue(event.data.object as Stripe.Invoice);
+      break;
+  }
+  return new Response(null, { status: 200 });
+}`};
+function kit(){
+ return head("Next.js starter kit","The same rules this demo enforces, as production code for Clerk and Stripe.")+
+ Object.entries(KIT).map(([k,v],i)=>`<div class="card" style="margin-bottom:16px"><div class="row" style="margin-bottom:10px"><h3 class="mono">${esc(k)}</h3><button class="btn sm" data-act="copy" data-i="${i}">Copy</button></div><pre>${esc(v)}</pre></div>`).join("")+
+ `<div class="card"><h3>Environment variables</h3><pre>NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
+CLERK_SECRET_KEY=sk_test_...
+STRIPE_SECRET_KEY=sk_test_...
+STRIPE_WEBHOOK_SECRET=whsec_...</pre></div>`}
+
+const V={overview,members,roles,billing,sso,audit,kit};
+function render(){
+ const y=window.scrollY;
+ $("#root").innerHTML=S.user?shell(V[S.view]()):loginView();
+ window.scrollTo(0,y)}
+
+/* ---------- checkout ---------- */
+function checkout(k){
+ const t=tn(),np=price(k),op=PLANS[t.plan].price,diff=Math.round((np-op)/2*100)/100;
+ $("#layer").innerHTML=`<div class="mod" data-act="close"><div class="card" role="dialog" aria-modal="true" aria-label="Confirm plan change" data-stop>
+ <h2>Switch to ${PLANS[k].name}</h2><span class="badge acc" style="justify-self:start">Test mode</span>
+ <div class="row"><span>New price</span><b>${usd(np)} /month</b></div>
+ <div class="row"><span>${diff>=0?"Prorated charge today":"Credit applied"}</span><b>${usd(Math.abs(diff))}</b></div>
+ <div><label for="cn">Card number</label><input id="cn" class="mono" value="4242 4242 4242 4242" inputmode="numeric"></div>
+ <div class="row"><button class="btn" data-act="close">Cancel</button><button class="btn pri" data-act="pay" data-k="${k}" data-d="${diff}">Confirm and pay</button></div></div></div>`;
+ $("#layer .pri").focus()}
+
+/* ---------- events ---------- */
+document.addEventListener("click",e=>{
+ const el=e.target.closest("[data-act]");if(!el)return;
+ if(el.classList.contains("mod")&&e.target.closest("[data-stop]"))return;
+ const a=el.dataset.act,d=el.dataset,t=tn&&S.user?tn():null;
+ if(a==="login"){S.user=d.u;const mine=Object.keys(T).filter(k=>T[k].members.some(x=>x.email===S.user));S.tid=mine[0];S.view="overview";render()}
+ else if(a==="sso"){toast("Redirecting to "+d.p+"…");setTimeout(()=>{S.user="ada@acme.io";S.tid="acme";S.view="overview";render();toast("Signed in through "+d.p+" as Ada Okafor")},900)}
+ else if(a==="out"){S.user=null;render()}
+ else if(a==="nav"){S.view=d.v;render()}
+ else if(a==="per"){S.annual=d.v==="1";render()}
+ else if(a==="close"){$("#layer").innerHTML=""}
+ else if(a==="burst")guard("org:usage:write","Send metered usage",()=>{t.api+=25000;log("Recorded 25,000 metered API calls");toast("25,000 calls metered")});
+ else if(a==="rm")guard("org:members:manage","Remove a member",()=>{const x=t.members.splice(+d.i,1)[0];log("Removed "+x.email)});
+ else if(a==="invite"){const em=$("#ie").value.trim(),ro=$("#ir").value;
+  if(!/^\S+@\S+\.\S+$/.test(em)){toast("Enter a valid work email.",true);return}
+  if(t.members.length>=PLANS[t.plan].seats&&can("org:members:manage")){log("Blocked: invite exceeds seat limit",false);toast("Seat limit reached. Upgrade your plan to add people.",true);render();return}
+  guard("org:members:manage","Invite a member",()=>{t.members.push({email:em,name:em.split("@")[0],role:ro});log("Invited "+em+" as "+ro);toast("Invite sent to "+em)})}
+ else if(a==="plan")guard("org:billing:manage","Change the plan",()=>{checkout(d.k)});
+ else if(a==="pay"){const k=d.k,df=+d.d;$("#layer").innerHTML="";
+  guard("org:billing:manage","Change the plan",()=>{const o=t.plan;t.plan=k;if(!PLANS[k].sso){t.sso.on=false}
+   t.inv.unshift({id:"INV-"+(1100+t.inv.length*7),d:new Date().toLocaleDateString("en-US",{month:"short",day:"2-digit",year:"numeric"}),a:Math.max(0,df),s:"paid"});
+   log("Plan changed "+PLANS[o].name+" → "+PLANS[k].name);toast("Now on the "+PLANS[k].name+" plan")})}
+ else if(a==="ssotest")toast("SAML assertion validated for "+$("#sd").value);
+ else if(a==="ssosave")guard("org:sso:manage","Configure SSO",()=>{t.sso={provider:$("#sp").value,domain:$("#sd").value.trim(),enforce:$("#se").checked,on:true};log("SSO saved: "+t.sso.provider+(t.sso.enforce?" (enforced)":""));toast("SSO connection saved")});
+ else if(a==="copy"){const txt=Object.values(KIT)[+d.i];try{navigator.clipboard.writeText(txt);toast("Copied")}catch(_){toast("Select the code and copy it manually.",true)}}
+});
+document.addEventListener("change",e=>{
+ const el=e.target;
+ if(el.id==="tsel"){S.tid=el.value;S.view="overview";render()}
+ else if(el.dataset.act==="role"){const i=+el.dataset.i,v=el.value;guard("org:members:manage","Change a role",()=>{const x=tn().members[i];log("Changed "+x.email+": "+x.role+" → "+v);x.role=v})}
+});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")$("#layer").innerHTML=""});
+render();
+</script>
+</body>
+</html>
